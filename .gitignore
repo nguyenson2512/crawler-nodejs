@@ -1,0 +1,17 @@
+logs
+
+node_modules
+
+dist
+
+build
+
+archive
+
+.npm
+
+.idea
+
+.env
+
+package-lock.json
