@@ -129,10 +129,10 @@ app.post("/", async (req, res) => {
   const url = req.body.url;
   try {
     await run(url);
+    res.send("done");
   } catch (error) {
     res.send("error");
   }
-  res.send("done");
 });
 
 app.listen(4000, () => {
