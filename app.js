@@ -131,6 +131,7 @@ app.post("/", async (req, res) => {
     await run(url);
     res.send("done");
   } catch (error) {
+    console.log(error);
     res.send("error");
   }
 });
