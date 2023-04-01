@@ -114,6 +114,10 @@ function isNumber(char) {
   return !isNaN(parseInt(char));
 }
 
+app.get("/", async (req, res) => {
+  res.send("hello");
+});
+
 app.post("/", async (req, res) => {
   const url = req.body.url;
   await run(url);
