@@ -33,9 +33,16 @@ async function run(url) {
     // Headless option allows us to disable visible GUI, so the browser runs in the "background"
     // for development lets keep this to true so we can see what's going on but in
     // on a server we must set this to true
-    headless: false,
+    headless: true,
     // This setting allows us to scrape non-https websites easier
     ignoreHTTPSErrors: true,
+    args: [
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+      "--single-process",
+      "--no-zygote",
+    ],
+    executablePath: puppeteer.executablePath(),
   });
   // then we need to start a browser tab
   let page = await browser.newPage();
@@ -120,7 +127,11 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   const url = req.body.url;
-  await run(url);
+  try {
+    await run(url);
+  } catch (error) {
+    res.send("error");
+  }
   res.send("done");
 });
 
