@@ -45,13 +45,10 @@ app.post("/", async (req, res) => {
   const browser = await puppeteer.launch({
     headless: true,
     ignoreHTTPSErrors: true,
-    args: ["--disable-setuid-sandbox", "--no-sandbox"],
-    executablePath: "/usr/bin/chromium-browser",
+    // args: ["--disable-setuid-sandbox", "--no-sandbox"],
+    // executablePath: "/usr/bin/chromium-browser",
   });
   try {
-    console.log(process.env.NODE_ENV);
-    console.log(process.env.PUPPETEER_EXECUTABLE_PATH);
-    console.log(puppeteer.executablePath());
     let page = await browser.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
@@ -100,6 +97,12 @@ app.post("/", async (req, res) => {
     const brand = await page.$(".GvvZVe");
     const brandText = await page.evaluate((brand) => brand.textContent, brand);
     console.log({ brandText });
+
+    const description = await page.$(".irIKAp");
+    const descriptionText = await page.evaluate(
+      (description) => description.textContent,
+      description
+    );
     await sheet.addRow({
       "Nhãn hàng": brandText,
       "Tên sản phẩm": spanText,
@@ -108,6 +111,7 @@ app.post("/", async (req, res) => {
       "Link sản phẩm Shopee": `=HYPERLINK("${decodeURIComponent(
         url
       )}"; "Link")`,
+      "Mô tả": descriptionText,
     });
     res.send("done");
   } catch (error) {
