@@ -46,10 +46,7 @@ app.post("/", async (req, res) => {
     headless: true,
     ignoreHTTPSErrors: true,
     args: ["--disable-setuid-sandbox", "--no-sandbox"],
-    executablePath:
-      process.env.NODE_ENV === "production"
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-        : puppeteer.executablePath(),
+    executablePath: "/usr/bin/chromium-browser",
   });
   try {
     console.log(process.env.NODE_ENV);
