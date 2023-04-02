@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-require("dotenv").config();
+// require("dotenv").config();
 
 const puppeteer = require("puppeteer");
 var { GoogleSpreadsheet } = require("google-spreadsheet");
@@ -45,21 +45,18 @@ app.post("/", async (req, res) => {
   const browser = await puppeteer.launch({
     headless: true,
     ignoreHTTPSErrors: true,
-    args: [
-      "--disable-setuid-sandbox",
-      "--no-sandbox",
-      "--disable-dev-shm-usage",
-    ],
+    args: ["--disable-setuid-sandbox", "--no-sandbox"],
     executablePath:
       process.env.NODE_ENV === "production"
         ? process.env.PUPPETEER_EXECUTABLE_PATH
         : puppeteer.executablePath(),
   });
   try {
+    console.log(process.env.NODE_ENV);
+    console.log(process.env.PUPPETEER_EXECUTABLE_PATH);
+    console.log(puppeteer.executablePath());
     let page = await browser.newPage();
-    await page.goto(url, {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(url, { waitUntil: "domcontentloaded" });
 
     await page.waitForSelector("._44qnta", {
       timeout: 30000,
