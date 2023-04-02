@@ -43,7 +43,7 @@ app.post("/", async (req, res) => {
   const sheet = doc.sheetsByIndex[0];
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     ignoreHTTPSErrors: true,
     args: [
       "--disable-setuid-sandbox",
@@ -61,8 +61,11 @@ app.post("/", async (req, res) => {
     await page.goto(url, {
       waitUntil: "domcontentloaded",
     });
+    // Wait for the page to fully load
+    await page.waitForNavigation({ waitUntil: "load" });
+
     await page.waitForSelector("._44qnta", {
-      timeout: 20000,
+      timeout: 30000,
     });
 
     const titleElement = await page.$("._44qnta");
