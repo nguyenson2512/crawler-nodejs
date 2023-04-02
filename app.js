@@ -10,11 +10,6 @@ const puppeteer = require("puppeteer");
 var { GoogleSpreadsheet } = require("google-spreadsheet");
 var creds = require("./creds.json");
 
-// let url =
-// "https://shopee.vn/%C4%90%E1%BA%A7m-c%C3%B4ng-s%E1%BB%9F-CITI-MODE-FASHION-d%C3%A1ng-xo%C3%A8-k%E1%BA%BB-%C4%91%E1%BB%8F-peplum-ph%E1%BB%91i-c%C3%BAc-s%C6%B0%E1%BB%9Dn-ch%C3%A2n-v%C3%A1y-%C4%91en-DH3647-i.822377674.18736542242?fbclid=IwAR1cSVJBR_OfDF__9-a1RpP6w1Ui-pIHsEpCGBUchxIdS-XvwTMx78Fvw9k";
-
-// let url =
-//   "https://levunguyen.com/cauhoi/2020/06/17/cau-hoi-phong-van-lap-trinh-angular/";
 async function run(url) {
   url = decodeURIComponent(url);
   console.log({ url });
@@ -28,6 +23,8 @@ async function run(url) {
   const sheet = doc.sheetsByIndex[0];
 
   const browser = await puppeteer.launch({
+    headless: true,
+    ignoreHTTPSErrors: true,
     args: [
       "--disable-setuid-sandbox",
       "--no-sandbox",
@@ -45,7 +42,9 @@ async function run(url) {
   await page.goto(url, {
     waitUntil: "domcontentloaded",
   });
-  await page.waitForSelector("._44qnta");
+  await page.waitForSelector("._44qnta", {
+    timeout: 10000,
+  });
 
   const titleElement = await page.$("._44qnta");
   const spanElement = await titleElement.$("span");
