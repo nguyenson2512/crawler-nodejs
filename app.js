@@ -34,20 +34,32 @@ app.post("/", async (req, res) => {
   url = decodeURIComponent(url);
   console.log({ url });
 
-  var doc = new GoogleSpreadsheet(
-    "1cXnNxJFkzuxL0Uk0LpEUYNypuDiEhfWu-l0jY4MRSyI"
-  );
-  await doc.useServiceAccountAuth(creds);
-  await doc.loadInfo(); // loads document properties and worksheets
+  try {
+    var doc = new GoogleSpreadsheet(
+      "1cXnNxJFkzuxL0Uk0LpEUYNypuDiEhfWu-l0jY4MRSyI"
+    );
+    await doc.useServiceAccountAuth(creds);
+    await doc.loadInfo(); // loads document properties and worksheets
 
-  const sheet = doc.sheetsByIndex[0];
+    var sheet = doc.sheetsByIndex[0];
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    ignoreHTTPSErrors: true,
-    // args: ["--disable-setuid-sandbox", "--no-sandbox"],
-    // executablePath: "/usr/bin/chromium-browser",
-  });
+    var browser = await puppeteer.launch({
+      headless: true,
+      ignoreHTTPSErrors: true,
+      args: [
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--single-process",
+        "--no-zygote",
+      ],
+      // executablePath: "/usr/bin/chromium-browser",
+      executablePath: "/usr/bin/chromium",
+      timeout: 60000, // 60 second timeout
+    });
+  } catch (error) {
+    console.log({ error });
+  }
+
   try {
     let page = await browser.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
